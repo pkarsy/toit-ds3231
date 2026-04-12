@@ -189,3 +189,7 @@ resyncing the time from NTP or another trusted source.
 
 This approach avoids the need for a voltage divider and ADC input to sense the
 coin cell voltage directly.
+
+In practise we might elect not to trust the time stored on the RTC if
+`oscillator-stopped` is true.  A smart choice then might be to set the time
+again on the RTC from another source.
