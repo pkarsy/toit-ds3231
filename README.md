@@ -170,8 +170,22 @@ Can get a value from -128 up to 127 to make the clock more accurate (significant
 - [this project](https://github.com/gbhug5a/DS3231-Aging-GPS), is much faster but also
   needs more work (and hardware) to implement.
 
-## VCC GND and battey powered projects
+## VCC GND and battery powered projects
 On battery, the 4mA the DS3231 is using, is a huge consumption. For this
 purpose the VCC and GND can be GPIO pins, and the DS3231 module is powered OFF when
 in deep-sleep. Assuming a good CR2032 coin cell, the time keeping function will
 still work (for 10 years !) and the registers will retain their values.
+
+## Oscillator Stop Detection
+The DS3231 has a Oscillator Stop Flag (OSF) in its status register.  This is set
+whenever the oscillator stops — typically because the coin cell battery was
+exhausted or removed during a power loss.  This provides a simple way to detect
+whether the RTC time is still valid on boot without any additional hardware.
+
+`oscillator-stopped` reads this flag and returns true if the oscillator has
+stopped since it was last cleared. `clear-oscillator-stopped` resets the flag
+which must be run manualy once the condition has been handled — typically after
+resyncing the time from NTP or another trusted source.
+
+This approach avoids the need for a voltage divider and ADC input to sense the
+coin cell voltage directly.
