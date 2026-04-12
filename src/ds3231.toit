@@ -351,8 +351,30 @@ class Ds3231:
     return (x / 16) * 10 + (x % 16)
 
 
+  /**
+  Returns true if the oscillator has stopped since the flag was last cleared.
 
+  This flag is set when the oscillator stops or was stopped — including when the
+    coin cell was insufficient to maintain operation during a power loss. It is
+    only cleared by calling $clear-oscillator-stopped.
 
+  Check this on boot to determine whether the RTC time is still valid.  If true,
+    the time should be considered invalid and resynced from NTP or another
+    source.
+  */
+  oscillator-stopped -> bool:
+    return (registers.read-u8 REG-STATUS_) & 0x80 != 0
+
+  /**
+  Clears the oscillator stopped flag.
+
+  Call this after handling a stopped-oscillator condition — typically after
+    resyncing the time from NTP or another source. If not cleared,
+    $oscillator-stopped will continue to return true even after the oscillator
+    has been running normally.
+  */
+  clear-oscillator-stopped -> none:
+    set-value-with-mask --register=REG-STATUS_ --mask=0x80 --value=0x00
 
   /**
   Enables or disables either of the hardware alarms.
