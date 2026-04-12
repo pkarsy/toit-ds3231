@@ -185,11 +185,8 @@ whether the RTC time is still valid on boot without any additional hardware.
 `oscillator-stopped` reads this flag and returns true if the oscillator has
 stopped since it was last cleared. `clear-oscillator-stopped` resets the flag
 which must be run manualy once the condition has been handled — typically after
-resyncing the time from NTP or another trusted source.
+resyncing the time from NTP or another trusted source.  An example of this is
+in `osf.toit` in the [examples](./examples/) folder.
 
 This approach avoids the need for a voltage divider and ADC input to sense the
 coin cell voltage directly.
-
-In practise we might elect not to trust the time stored on the RTC if
-`oscillator-stopped` is true.  A smart choice then might be to set the time
-again on the RTC from another source.
